@@ -5,6 +5,18 @@ import './style.css'
 
 export default class User extends Component {
 
+    handleClick = () => {
+        
+        this.props.handle()
+        this.props.handleLogout()        
+    }
+
+    hh = () => {
+
+        this.props.handle()
+        this.props.handleLogin()
+    }
+
     renderTemplate = () => {        
 
         const { name, error, isFetching } = this.props
@@ -12,13 +24,11 @@ export default class User extends Component {
         if (error) {
 
             return <p>Во время авторизации произошла ошибка, обновите страницу</p>
-
         }
 
         if (isFetching) {
 
             return <p>Авторизация...</p>
-
         }
 
         if (name) {
@@ -27,31 +37,25 @@ export default class User extends Component {
 
                 <div>
                     <p>Привет, {name}!</p>
-                    <button ref={ button => this.btn = button } className="btn" onClick={this.props.handleLogout}>
+                    <button ref={ button => this.btn = button } className="btn" onClick={this.handleClick}>
                         Выйти
                     </button>
                 </div>
-
             )
-
         } else {
 
             return (
 
-                <button className="btn" onClick={this.props.handleLogin}>
+                <button className="btn" onClick={this.hh}>
                     Войти
                 </button>
-
             )
-
         }
-
     }
 
     render() { 
         
         return <div className="ib user">{this.renderTemplate()}</div>
-
     }
 }
 
@@ -62,5 +66,4 @@ User.propTypes = {
     isFetching: PropTypes.bool.isRequired,
     handleLogin: PropTypes.func.isRequired,
     handleLogout: PropTypes.func.isRequired,
-
 }

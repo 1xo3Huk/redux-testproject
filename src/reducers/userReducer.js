@@ -5,7 +5,6 @@ const initialState = {
     name: '',
     error: '',
     isFetching: false,
-
 }
 
 export function userReducer(state = initialState, action) {
@@ -29,7 +28,5 @@ export function userReducer(state = initialState, action) {
 
         default:
             return state
-
     }
-
 }

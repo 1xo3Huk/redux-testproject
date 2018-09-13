@@ -1,12 +1,47 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import Photos from '../Photos'
+
+let favArr = []
+
 export default class Page extends Component {
+
+    state = {
+
+        favIsVisible: false,
+    }
+
     onBtnClick = e => {
 
-        const year =+ e.currentTarget.innerText
-        this.props.getPhotos(year)
+        const year =+ e.currentTarget.innerText;
+        this.props.getPhotos(year, this.props.isLogout);
+    }
 
+    onFavClick = () => {
+        
+        this.props.addToFavorite(favArr)
+    }
+
+    addToFav = (id) => {        
+        
+        if (!this.state.favIsVisible){
+            
+            this.changeState();
+        }
+
+        if (favArr.indexOf(id) < 0) {
+            
+            favArr.push(id)
+        }
+    }
+
+    changeState = () => {
+
+        this.setState({
+
+            favIsVisible: !this.state.favIsVisible
+        })
     }
     
     renderButtons = () => {
@@ -21,39 +56,58 @@ export default class Page extends Component {
                 <button key={item} className="btn" onClick={this.onBtnClick}>
                     {item}
                 </button>
-
-            )
-            
+            )            
         })
-
     }
 
-    template = () => {
+    renderGallery = () => {
+
         const { photos, isFetching, error } = this.props
 
         if (error) {
 
             return <p className="error">Во время загрузки фото произошла ошибка</p>
-
         }
     
         if (isFetching) {
 
             return <p>Чтобы просмотреть фото авторизуйтесь на сайте...</p>
+        } else {
+            
+            return photos.map( entry => {
 
+                var select = () => {
+
+                    this.addToFav(entry.id);
+                };
+
+                return (
+
+                    <Photos key={entry.id} entry={entry} select={select} />                       
+                )
+            })
+        }
+    }
+
+    renderFavorite = () => {
+        
+        const { isFavorite } = this.props
+
+        if (this.state.favIsVisible) {
+            
+            return isFavorite.map( entry => {
+                
+                return (
+
+                    <Photos key={entry.id} entry={entry} />                       
+                )
+            })
         } else {
 
-            return photos.map((entry, index) => (
-
-                <div key={index} className="photo">
-                    <p>
-                    <img src={entry.sizes[0].url} alt="" />
-                    </p>
-                    <p>{entry.likes.count} ❤</p>
-                </div>
-
-            ))
-
+            return (
+                
+                <div></div>
+            )
         }
     }
     
@@ -67,10 +121,14 @@ export default class Page extends Component {
                     {this.renderButtons()}
                 </p>
                 <h3>{year} год [{photos.length}]</h3>
-                {this.template()}
+
+                {this.renderGallery()}
+
+                <button className="btn" onClick={this.onFavClick} >Add to favorite</button>
+
+                {this.renderFavorite()}
             </div>
         )
-
     }
 }
 
@@ -81,5 +139,4 @@ Page.propTypes = {
     getPhotos: PropTypes.func.isRequired,
     error: PropTypes.string,
     isFetching: PropTypes.bool.isRequired,
-
 }

@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import Page from '../components/Page'
-import { getPhotos } from '../actions/PageActions'
+import { getPhotos, addToFavorite } from '../actions/PageActions'
 
 class PageContainer extends Component {
 
     render() {
         
-        const { page, getPhotos } = this.props
+        const { page, getPhotos, addToFavorite, isLogout } = this.props
         
         return (
 
@@ -16,34 +16,31 @@ class PageContainer extends Component {
                 photos={page.photos}
                 year={page.year}
                 isFetching={page.isFetching}
+                isFavorite={page.isFavorite}
                 error={page.error}
                 getPhotos={getPhotos}
-            />
-        
+                addToFavorite={addToFavorite}
+                isLogout={isLogout}
+            />        
         )
-
     }
-
 }
 
 const mapStateToProps = store => {
 
     return {
 
-        page: store.pageReducer,
-        
+        page: store.pageReducer,        
     }
-
 }
 
 const mapDispatchToProps = dispatch => {
-
+    
     return {
 
-        getPhotos: year => dispatch(getPhotos(year)),
-
-    }
-    
+        getPhotos: (year, isLogout) => dispatch(getPhotos(year, isLogout)),
+        addToFavorite: arr => dispatch(addToFavorite(arr)),
+    }    
 }
 
 export default connect(

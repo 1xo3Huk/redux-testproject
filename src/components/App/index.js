@@ -7,17 +7,27 @@ import './style.css';
 
 export default class App extends Component {
     
+    state = {
+
+        logoutIsComplete: true,
+    }
+
+    changeLogoutState = () => {
+
+        this.setState({
+
+            logoutIsComplete: !this.state.logoutIsComplete
+        })
+    }
+
     render() {
         
         return (
 
             <div className="app">
-                <PageContainer />
-                <UserContainer />
+                <PageContainer isLogout={this.state.logoutIsComplete} />
+                <UserContainer handle={this.changeLogoutState} />
             </div>
-
         )
-
     }
-
 }
